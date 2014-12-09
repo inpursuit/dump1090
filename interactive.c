@@ -29,6 +29,8 @@
 //
 
 #include "dump1090.h"
+#include "sql_io.h"
+
 //
 // ============================= Utility functions ==========================
 //
@@ -95,6 +97,9 @@ void interactiveRemoveStaleDF(time_t now) {
                 // expired, so delete them all
                 while (pDF) {
                     prev = pDF; pDF = pDF->pNext;
+                    if(Modes.sql) {
+                      modesSQLAircraftRemoved(prev->pAircraft);
+                    }
                     free(prev);
                 }
 
@@ -399,6 +404,9 @@ struct aircraft *interactiveReceiveData(struct modesMessage *mm) {
     // If we are Logging DF's, and it's not a Mode A/C
     if ((Modes.bEnableDFLogging) && (mm->msgtype < 32)) {
         interactiveCreateDF(a,mm);
+    }
+    if (Modes.sql) {
+      modesSQLOutput(a);
     }
 
     return (a);

@@ -59,6 +59,7 @@
     #include <sys/ioctl.h>
     #include "rtl-sdr.h"
     #include "anet.h"
+    #include "sql_io.h"
 #else
     #include "winstubs.h" //Put everything Windows specific in here
     #include "rtl-sdr.h"
@@ -293,6 +294,8 @@ struct {                             // Internal state
     int   beast;                     // Beast binary format output
     int   mode_ac;                   // Enable decoding of SSR Modes A & C
     int   debug;                     // Debugging mode
+    int   sql;                       // Enable output to SQL database
+    char  *sql_file;                 // SQL file location
     int   net;                       // Enable networking
     int   net_only;                  // Enable just networking
     int   net_heartbeat_count;       // TCP heartbeat counter

@@ -693,6 +693,10 @@ int main(int argc, char **argv) {
             Modes.raw = 1;
         } else if (!strcmp(argv[j],"--net")) {
             Modes.net = 1;
+        } else if (!strcmp(argv[j],"--sql")) {
+            Modes.sql = 1;
+        } else if (!strcmp(argv[j],"--sql-file")) {
+            Modes.sql_file = strdup(argv[++j]);
         } else if (!strcmp(argv[j],"--modeac")) {
             Modes.mode_ac = 1;
         } else if (!strcmp(argv[j],"--net-beast")) {
@@ -819,6 +823,7 @@ int main(int argc, char **argv) {
         }
     }
     if (Modes.net) modesInitNet();
+    if (Modes.sql) modesInitSQL();
 
     // If the user specifies --net-only, just run in order to serve network
     // clients without reading data from the RTL device
