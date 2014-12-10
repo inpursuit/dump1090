@@ -34,6 +34,7 @@
 //
 void sigintHandler(int dummy) {
     MODES_NOTUSED(dummy);
+    modesDestroySQL();
     signal(SIGINT, SIG_DFL);  // reset signal handler - bit extra safety
     Modes.exit = 1;           // Signal to threads that we are done
 }

@@ -22,7 +22,7 @@ void createTablesIfNotExist() {
         "modeac_flags INTEGER );";
   rc = sqlite3_exec(database, sql, 0, 0, &errMsg);
   if (rc != SQLITE_OK) {
-    fprintf(stderr, "Could not create tables: %s\n", errMsg);
+    fprintf(stderr, "Could not create table or table already exists: %s\n", errMsg);
     sqlite3_free(errMsg);
   }
 }
@@ -40,8 +40,9 @@ void removeAllData() {
   }
 }
 
-void shutdown(int dummy) {
+void modesDestroySQL() {
   if (database) {
+    removeAllData();
     sqlite3_close(database);
   }
 }
@@ -54,7 +55,6 @@ void modesInitSQL() {
     createTablesIfNotExist();
     removeAllData();
   }
-  signal(SIGINT, shutdown);
 }
 
 void modesSQLAircraftRemoved(struct aircraft *a) {
@@ -93,9 +93,8 @@ void modesSQLOutput(struct aircraft *a) {
         "(ICAO,flight,latitude,longitude,altitude,speed," \
         "course,vert_rate,messages,modea,modec," \
         "modea_count,modec_count,modeac_flags) " \
-        "VALUES ((SELECT ICAO FROM ADSB_AIRCRAFT WHERE ICAO = ?)," \
-        "?,?,?,?,?,?,?,?,?,?,?,?,?)";
- 
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
   rc = sqlite3_prepare(database, sql, -1, &stmt, 0);
   if (rc == SQLITE_OK) {
     sqlite3_bind_int(stmt, 1, a->addr);

@@ -15,7 +15,8 @@
 struct aircraft;
 sqlite3 *database;
 
-void modesInitSQL   (void);
+void modesDestroySQL (void);
+void modesInitSQL    (void);
 void modesSQLAircraftRemoved(struct aircraft *a);
 void modesSQLOutput (struct aircraft *a);
 
